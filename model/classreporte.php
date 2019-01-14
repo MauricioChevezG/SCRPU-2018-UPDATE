@@ -523,6 +523,14 @@ public function listarAntecedentesDominio()
 		$result = $this->conexion->ConsultaRetorno($sql);
 		return $result;
 	}
+
+	public function listarObservaciones(){
+		$sql = "CALL R_INS_OBSERVACIONES('$this->PU04IDTRA');";
+		$result = $this->conexion->ConsultaRetorno($sql);
+		return $result;
+	}
+
+
 	//Fin Reporte Inspección
 
 	public function convertToclassreporte($result)

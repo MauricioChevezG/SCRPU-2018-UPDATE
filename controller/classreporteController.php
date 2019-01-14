@@ -103,6 +103,7 @@ class classreporteController
 	private $patentes;
 	private $accesoservi;
 	private $areas;
+	private $observacionesins;
 	//Fin Reporte Inspección
 function __construct()
 {
@@ -172,6 +173,7 @@ public function rInspeccion(){
 	$this->patentes 		  = new classreporte();
 	$this->accesoservi 		  = new classreporte();
 	$this->areas 			  = new classreporte();
+	$this->observacionesins   = new classreporte();
 
 	$this->inspeccion->setAtributo('PU04IDTRA', $_REQUEST['id']);
 	$rLista 			= $this->inspeccion->listarInspeccion();
@@ -190,6 +192,8 @@ public function rInspeccion(){
 	$rAcServi 			= $this->accesoservi->listarAcServi();
 	$this->areas->setAtributo('PU04IDTRA', $_REQUEST['id']);
 	$rAreas 			= $this->areas->listarAreas();
+	$this->observacionesins->setAtributo('PU04IDTRA',$_REQUEST['id']);
+	$rObservacionesIns  = $this->observacionesins->listarObservaciones();
 
 	$pdf 				= new PDF();
 	$pdf->AliasNbPages();
@@ -206,45 +210,58 @@ public function rInspeccion(){
 			$pdf->MultiCell(103,5,utf8_decode('GPS'),0,0,'J');
 			$pdf->MultiCell(130,5,utf8_decode('Norte: '.$ins[2].' Este: '.$ins[3].' Altitud: '.$ins[4]),0,0,'J');
 			$pdf->MultiCell(50,5,utf8_decode('Cedula: '.$ins[5]),0,1,'J');
-			$pdf->MultiCell(190,5,utf8_decode('Nombre: '.$ins[6].''.$ins[7].''.$ins[8]),0,1,'J');
+			$pdf->MultiCell(190,5,utf8_decode('Nombre: '.$ins[6].' '.$ins[7].' '.$ins[8]),0,1,'J');
 		}
 		$pdf->MultiCell(115,5,utf8_decode('Datos Inspección'),0,0,'J');
 		$pdf->MultiCell(118,5,utf8_decode('Espacio Geográfico'),0,1,'J');
+		$pdf->Ln(3);
 		while ($eg = mysqli_fetch_array($rEsGeo)) {
 			$pdf->MultiCell(100,5,utf8_decode('* '.$eg[0]),0,1,'J');
 		}
-		
+		$pdf->Ln(3);
 		$pdf->MultiCell(118,5,utf8_decode('Aspectos Biofísicos'),0,1,'J');
+		$pdf->Ln(3);
 		while ($ab = mysqli_fetch_array($rAsBio)) {
 			$pdf->MultiCell(100,5,utf8_decode('* '.$ab[0]),0,1,'J');
 		}
-		
+		$pdf->Ln(3);
 		$pdf->MultiCell(120,5,utf8_decode('Desarrollo en el Sector'),0,1,'J');
+		$pdf->Ln(3);
 		while ($ds = mysqli_fetch_array($rDesSec)) {
 			$pdf->MultiCell(100,5,utf8_decode('* '.$ds[0]),0,1,'J');
 		}
-		
+		$pdf->Ln(3);
 		$pdf->MultiCell(112,5,utf8_decode('Tipo Red Vial'),0,1,'J');
+		$pdf->Ln(3);
 		while ($tr = mysqli_fetch_array($rTipRed)) {
 			$pdf->MultiCell(100,5,utf8_decode('* '.$tr[0]),0,1,'J');
 		}
-
+		$pdf->Ln(3);
 		$pdf->MultiCell(108,5,utf8_decode('Patentes'),0,1,'J');
+		$pdf->Ln(3);
 		while ($p = mysqli_fetch_array($rPaten)) {
 			$pdf->MultiCell(100,5,utf8_decode('* '.$p[0]),0,1,'J');
 		}
-
+		$pdf->Ln(3);
 		$pdf->MultiCell(122,5,utf8_decode('Acceso de Servidumbre'),0,1,'J');
+		$pdf->Ln(3);
 		while ($as = mysqli_fetch_array($rAcServi)) {
 			$pdf->MultiCell(100,5,utf8_decode('* '.$as[0]),0,1,'J');
 		}
-
+		$pdf->Ln(3);
 		$pdf->MultiCell(105,5,utf8_decode('Áreas'),0,1,'J');
+		$pdf->Ln(3);
 		while ($a = mysqli_fetch_array($rAreas)) {
 			$pdf->MultiCell(100,5,utf8_decode('* '.$a[0]),0,1,'J');
 		}
-
-		$pdf->Ln(5);
+		$pdf->Ln(3);
+		$pdf->MultiCell(105, 5, utf8_decode('Observaciones de Inspección'));
+		$pdf->Ln(3);
+		while ($oi = mysqli_fetch_array($rObservacionesIns)) {
+			$pdf->MultiCell(195,5,utf8_decode('* '.$oi[0]),0,1,'J');
+		}
+		$pdf->Ln(3);
+		$pdf->Ln(3);
 	 	$pdf->MultiCell(190,5,"Atentamente, ",0,1);
 	 	$pdf->MultiCell(180,5,"Firma Inspector",0,0);
 	 	$pdf->Ln(2);
